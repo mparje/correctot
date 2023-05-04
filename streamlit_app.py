@@ -3,20 +3,33 @@ import openai
 import streamlit as st
 import docx
 
-# Configurar la clave de la API de OpenAI
+# Configure OpenAI API key
 api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password")
 
+st.sidebar.title("App Description")
+st.sidebar.write(
+    """
+    This Streamlit application demonstrates the use of GPT-3.5-turbo, an 
+    advanced AI language model, to automatically correct grammar
+    and improve style in Word documents. To use the application, upload a .docx 
+    file and let GPT-3.5-turbo process each paragraph of the document.
+    Once processed, download the corrected document in .docx format.
+    """
+)
+
 if not api_key:
-    st.warning("Please enter a valid API key to continue..")
+    st.warning("Please enter a valid API key to continue.")
 else:
     openai.api_key = api_key
+
+# ... The rest of the code remains unchanged ...
+
 
 def gpt_correct_prompt(prompt):
     completions = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=1024, n=1, stop=None,
                                            temperature=0.5)
     message = completions.choices[0].text.strip()
     return message
-
 
 def process_document(doc_buffer):
     doc = docx.Document(doc_buffer)
@@ -29,7 +42,7 @@ def process_document(doc_buffer):
             continue
 
         corrected_text = gpt_correct_prompt(
-            f"Reescribe el siguiente párrafo corrigiendo errores gramaticales y mejorando el estilo:\n'{original_text}'\n\nTexto corregido:")
+            f"Rewrite the following paragraph, correcting grammatical errors and improving the style:\n'{original_text}'\n\nCorrected text:")
         corrected_paragraph = corrected_doc.add_paragraph(corrected_text)
         for run in paragraph.runs:
             if run.bold:
@@ -41,11 +54,10 @@ def process_document(doc_buffer):
 
     return corrected_doc
 
+st.title('Grammatical Correction with GPT-3.5-turbo')
+st.write('Upload a Word document (.docx) and let GPT-3.5-turbo correct the grammatical errors and style.')
 
-st.title('Corrección Gramatical Utilizando GPT-3.5-turbo')
-st.write('Sube un documento de Word (.docx) y dejaré que GPT-3.5-turbo corrija los errores gramaticales y de estilo.')
-
-uploaded_file = st.file_uploader("Subir archivo", type=[".docx"])
+uploaded_file = st.file_uploader("Upload file", type=[".docx"])
 
 if uploaded_file is not None:
     with io.BytesIO(uploaded_file.getvalue()) as doc_buffer:
@@ -54,5 +66,5 @@ if uploaded_file is not None:
         with io.BytesIO() as bytes_io:
             corrected_doc.save(bytes_io)
             bytes_io.seek(0)
-            st.download_button(label="Descargar documento corregido", data=bytes_io,
-                               file_name="documento_corregido.docx")
+            st.download_button(label="Download corrected document", data=bytes_io,
+                               file_name="corrected_document.docx")
