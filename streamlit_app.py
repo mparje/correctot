@@ -3,7 +3,13 @@ import openai
 import streamlit as st
 import docx
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Configurar la clave de la API de OpenAI
+api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password")
+
+if not api_key:
+    st.warning("Please enter a valid API key to continue..")
+else:
+    openai.api_key = api_key
 
 def gpt_correct_prompt(prompt):
     completions = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=1024, n=1, stop=None,
