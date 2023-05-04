@@ -3,7 +3,7 @@ import openai
 import streamlit as st
 import docx
 
-openai.api_key = getenv(openai_api_key)
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def gpt_correct_prompt(prompt):
     completions = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=1024, n=1, stop=None,
