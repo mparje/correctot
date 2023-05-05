@@ -13,7 +13,7 @@ st.sidebar.write(
     advanced AI language model, to automatically correct grammar
     and improve style in Word documents. To use the application, upload a .docx 
     file and let GPT-3.5-turbo process each paragraph of the document.
-    Once processed, download the corrected document in .docx format.
+    Once processed, download the corrected document in .docx format. NOTE: this is a limited version.
     """
 )
 
