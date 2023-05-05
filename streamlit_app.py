@@ -17,13 +17,12 @@ st.sidebar.write(
     """
 )
 
+custom_prompt = st.sidebar.text_input("Enter your custom prompt (Leave empty for default prompt)")
+
 if not api_key:
     st.warning("Please enter a valid API key to continue.")
 else:
     openai.api_key = api_key
-
-# ... The rest of the code remains unchanged ...
-
 
 def gpt_correct_prompt(prompt):
     completions = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=1024, n=1, stop=None,
@@ -31,7 +30,7 @@ def gpt_correct_prompt(prompt):
     message = completions.choices[0].text.strip()
     return message
 
-def process_document(doc_buffer):
+def process_document(doc_buffer, custom_prompt):
     doc = docx.Document(doc_buffer)
     corrected_doc = docx.Document()
 
@@ -41,8 +40,12 @@ def process_document(doc_buffer):
             corrected_doc.add_paragraph()
             continue
 
-        corrected_text = gpt_correct_prompt(
-            f"Rewrite the following paragraph, correcting grammatical errors and improving the style:\n'{original_text}'\n\nCorrected text:")
+        if custom_prompt:
+            prompt = f"{custom_prompt}\n\nOriginal text:\n'{original_text}'\n\nCorrected text:"
+        else:
+            prompt = f"Rewrite the following paragraph, correcting grammatical errors and improving the style:\n'{original_text}'\n\nCorrected text:"
+            
+        corrected_text = gpt_correct_prompt(prompt)
         corrected_paragraph = corrected_doc.add_paragraph(corrected_text)
         for run in paragraph.runs:
             if run.bold:
@@ -61,7 +64,7 @@ uploaded_file = st.file_uploader("Upload file", type=[".docx"])
 
 if uploaded_file is not None:
     with io.BytesIO(uploaded_file.getvalue()) as doc_buffer:
-        corrected_doc = process_document(doc_buffer)
+        corrected_doc = process_document(doc_buffer, custom_prompt)
 
         with io.BytesIO() as bytes_io:
             corrected_doc.save(bytes_io)
