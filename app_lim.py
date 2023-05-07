@@ -64,7 +64,7 @@ def process_document(doc_buffer, custom_prompt, max_paragraphs=10):
 
     return corrected_doc
 
-st.image('http://tareas.site/wp-content/uploads/2023/05/dc.jpg')
+st.image('http://tareas.site/wp-content/uploads/2023/05/logo-e1683457433611.png')
 st.write('Upload a Word document (.docx) and let GPT-3.5-turbo correct up to 10 paragraphs with grammatical errors and style.')
 
 uploaded_file = st.file_uploader("Upload file", type=[".docx"])
