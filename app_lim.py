@@ -48,7 +48,7 @@ def process_document(doc_buffer, custom_prompt, max_paragraphs=10):
         if custom_prompt:
             prompt = f"{custom_prompt}\n\nOriginal text:\n'{original_text}'\n\nCorrected text:"
         else:
-            prompt = f"Rewrite the following paragraph, correcting grammatical errors and improving the style:\n'{original_text}'\n\nCorrected text:"
+            prompt = f"Rewrite the following paragraph, correcting grammatical errors and improving the style. Keep the original language:\n'{original_text}'\n\nCorrected text:"
             
         corrected_text = gpt_correct_prompt(prompt)
         corrected_paragraph = corrected_doc.add_paragraph(corrected_text)
