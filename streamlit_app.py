@@ -2,6 +2,7 @@ import io
 import openai
 import streamlit as st
 import docx
+import time  # Importar el módulo time
 
 # Configure OpenAI API key
 api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password")
@@ -44,7 +45,8 @@ def process_document(doc_buffer, custom_prompt):
             prompt = f"{custom_prompt}\n\nOriginal text:\n'{original_text}'\n\nCorrected text:"
         else:
             prompt = f"Rewrite the following paragraph, correcting grammatical errors and improving the style:\n'{original_text}'\n\nCorrected text:"
-            
+        
+        time.sleep(1)  # Agregar un descanso de 1 segundo antes de realizar una nueva solicitud a la API
         corrected_text = gpt_correct_prompt(prompt)
         corrected_paragraph = corrected_doc.add_paragraph(corrected_text)
         for run in paragraph.runs:
