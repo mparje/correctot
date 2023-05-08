@@ -26,10 +26,13 @@ else:
     openai.api_key = api_key
 
 def gpt_correct_prompt(prompt):
-    completions = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=1024, n=1, stop=None,
-                                           temperature=0.5)
-    message = completions.choices[0].text.strip()
-    return message
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "user", "content": prompt}
+        ])
+    response = completion.choices[0].message.content
+    return response
 
 def process_document(doc_buffer, custom_prompt):
     doc = docx.Document(doc_buffer)
@@ -44,7 +47,7 @@ def process_document(doc_buffer, custom_prompt):
         if custom_prompt:
             prompt = f"{custom_prompt}\n\nOriginal text:\n'{original_text}'\n\nCorrected text:"
         else:
-            prompt = f"Rewrite the following paragraph, correcting grammatical errors and improving the style; keep the original language:\n'{original_text}'\n\nCorrected text:"
+            prompt = f"Improve the following paragraph; try to keep hte original quotatios with their references; do not change list of references:\n'{original_text}'\n\nCorrected text:"
         
         time.sleep(1)  # Agregar un descanso de 1 segundo antes de realizar una nueva solicitud a la API
         corrected_text = gpt_correct_prompt(prompt)
