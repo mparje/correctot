@@ -47,7 +47,7 @@ def process_document(doc_buffer, custom_prompt):
         if custom_prompt:
             prompt = f"{custom_prompt}\n\nOriginal text:\n'{original_text}'\n\nCorrected text:"
         else:
-            prompt = f"Improve the following paragraph; do not change headers, titles, subtitles, or references; do not translate:\n'{original_text}'\n\nCorrected text:"
+            prompt = f"Mejore el siguiente párrafo:\n'{original_text}'\n\nCorrected text:"
         
         time.sleep(1)  # Agregar un descanso de 3 segundos antes de realizar una nueva solicitud a la API
         corrected_text = gpt_correct_prompt(prompt)
