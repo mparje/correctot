@@ -30,7 +30,7 @@ def gpt_correct_prompt(prompt):
     message = completions.choices[0].text.strip()
     return message
 
-def process_document(doc_buffer, custom_prompt, max_paragraphs=10):
+def process_document(doc_buffer, custom_prompt, max_paragraphs=100):
     doc = docx.Document(doc_buffer)
     corrected_doc = docx.Document()
 
